@@ -15,6 +15,9 @@
         this.cycle      = 0;
         this.currentMaxHeight = 0;
 
+        //set canvas properties
+        this.ctx.strokeStyle = "black";
+
         var that = this;
 
         this.init = function () {
@@ -38,9 +41,9 @@
             that.ctx.font = "10pt courier";
         }
 
-        var iterate = function(){
-            var _i, _x, _y, diff;
-            var Ps = [];
+        var getPoints = function()
+        {
+            var Ps = [], x, y;
             var maxHeight = 0;
             //write down all the points here
             for (x = 0;x<that.cnv.width;x++) {
@@ -53,9 +56,17 @@
             }
             if (maxHeight < 2) {
                 that.continuous = false;
-                return;
+                return new Array();
             }
             that.currentMaxHeight  = maxHeight;
+            return Ps;
+        }
+
+        var iterate = function(){
+            var _i, _x, _y, diff;
+            Ps = getPoints();
+            //clone
+            newPs = Ps.slice(0);
             for (i in Ps) {
                 x = Ps[i][0];
                 y = Ps[i][1];
@@ -75,7 +86,7 @@
                 }else{
                     _y = y+1;
                 }
-                //borders
+                //skip borders
                 if (_y >= that.cnv.height || _x >= that.cnv.width || _y < 0 || _x < 0)
                     continue;
                 //random neighbor is in _x,_y
@@ -83,13 +94,13 @@
                 if (diff > 0 ) {
                     that.world[_x][_y] += diff;
                     that.world[x][y] -= diff;
+                    newPs.push([_x,_y]);
                 }
-
             }
             if (that.continuous == true) {
                 setTimeout(iterate,10);
             }
-            drawMap();
+            drawMap(newPs);
             that.cycle ++;
         }
 
@@ -106,19 +117,28 @@
             that.world[x][y] = that.initHeight;
         }
 
-        var drawMap = function(){
-            that.ctx.clearRect(0,0,that.cnv.width,that.cnv.height);
-            that.ctx.fillStyle = "black";
-            for (x = 0;x<that.cnv.width;x++) {
-                for (y = 0;y<that.cnv.width;y++) {
-                    if (that.world[x][y] > 0 ) {
-                        var value = that.world[x][y];
-                        that.ctx.fillRect(x,y,1,1);
+        var drawMap = function(precalculatedPoints){
+            //No precalculated points, let's find them
+            if (typeof precalculatedPoints == "undefined") {
+                precalculatedPoints = [];
+                for (x = 0;x<that.cnv.width;x++) {
+                    for (y = 0;y<that.cnv.width;y++) {
+                        if (that.world[x][y] > 0 ) {
+                            precalculatedPoints.push([x,y]);
+                        }
                     }
                 }
             }
+
+            //Draw all the found points
+            that.ctx.clearRect(0,0,that.cnv.width,that.cnv.height);
+            that.ctx.fillStyle = "black";
+            for (i in precalculatedPoints) {
+                x = precalculatedPoints[i][0];
+                y = precalculatedPoints[i][1];
+                that.ctx.fillRect(x,y,1,1);
+            }
             that.ctx.fillStyle = "white";
-            that.ctx.strokeStyle = "black";
             that.ctx.strokeText ('Iteration  '+that.cycle, 0, 10);
             that.ctx.fillText   ('Iteration  '+that.cycle, 0, 10);
             that.ctx.strokeText ('Max height '+that.currentMaxHeight, 0, 20);
