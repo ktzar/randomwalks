@@ -64,34 +64,42 @@
             return Ps;
         }
 
-        var iterate = function(){
-            var _i, _x, _y, diff;
+        var findRandomNeighbour = function(x,y) 
+        {
+            //pick random neighbor
+            _i = parseInt(Math.random()*8);
+            if (_i == 1 || _i == 4 || _i == 6) {
+                _x = x-1;
+            }else if( _i == 2 || _i == 7) {
+                _x = x;
+            }else{
+                _x = x+1;
+            }
+            if (_i == 1 || _i == 2 || _i == 3) {
+                _y = y-1;
+            }else if( _i == 4 || _i == 5) {
+                _y = y;
+            }else{
+                _y = y+1;
+            }
+            return new Array(_x,_y);
+        }
+
+        var iterate = function()
+        {
+            var neighbour, _i, _x, _y, diff;
             Ps = getPoints();
             //clone
             newPs = new Array();//Ps.slice(0);
             for (i in Ps) {
                 x = Ps[i][0];
                 y = Ps[i][1];
-                //pick random neighbor
-                _i = parseInt(Math.random()*8);
-                if (_i == 1 || _i == 4 || _i == 6) {
-                    _x = x-1;
-                }else if( _i == 2 || _i == 7) {
-                    _x = x;
-                }else{
-                    _x = x+1;
-                }
-                if (_i == 1 || _i == 2 || _i == 3) {
-                    _y = y-1;
-                }else if( _i == 4 || _i == 5) {
-                    _y = y;
-                }else{
-                    _y = y+1;
-                }
+                neighbour = findRandomNeighbour(x,y);
+                _x = neighbour[0];
+                _y = neighbour[1];
                 //skip borders
                 if (_y >= that.cnv.height || _x >= that.cnv.width || _y < 0 || _x < 0)
                     continue;
-                //random neighbor is in _x,_y
                 diff = that.world[x][y] - that.world[_x][_y] - 1;
                 if (diff > 0 ) {
                     that.world[_x][_y] += diff;
