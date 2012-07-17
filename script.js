@@ -5,7 +5,7 @@
     4- If diff > 0, move that amount of elevation to the neighbour P'. (i.e. P.height -= diff; P'.height += diff;).
     5- Go back to step 2.
 */
-    var RandomWalks = function(canvas, initHeight, initPoints) {
+    var RandomWalks = function(canvas, initHeight, initPoints, callbacks) {
         this.cnv        = canvas;
         this.ctx        = this.cnv.getContext('2d');
         this.initHeight = initHeight;
@@ -14,9 +14,11 @@
         this.continuous = false;
         this.cycle      = 0;
         this.currentMaxHeight = 0;
+        this.callbacks  = callbacks;
 
         //set canvas properties
         this.ctx.strokeStyle = "black";
+        this.ctx.fillStyle = "black";
 
         var that = this;
 
@@ -132,28 +134,28 @@
 
             //Draw all the found points
             that.ctx.clearRect(0,0,that.cnv.width,that.cnv.height);
-            that.ctx.fillStyle = "black";
             for (i in precalculatedPoints) {
                 x = precalculatedPoints[i][0];
                 y = precalculatedPoints[i][1];
                 that.ctx.fillRect(x,y,1,1);
             }
-            that.ctx.fillStyle = "white";
-            that.ctx.strokeText ('Iteration  '+that.cycle, 0, 10);
-            that.ctx.fillText   ('Iteration  '+that.cycle, 0, 10);
-            that.ctx.strokeText ('Max height '+that.currentMaxHeight, 0, 20);
-            that.ctx.fillText   ('Max height '+that.currentMaxHeight, 0, 20);
+            that.callbacks.stats(that.currentMaxHeight, that.cycle);
         }
 
     };
 
 var randomralks;
 var $ = function(id){return document.getElementById(id)};
+var statsCallback = function (maxHeight, cycle) {
+    $('stats').innerHTML = 'MaxHeight: '+maxHeight+'<br/>Cycle: '+cycle;
+}
 window.addEventListener('load', function(){
     $('bt_init').addEventListener('click', function(e){
         var iniHeight = parseInt($('ini_height').value);
         var iniPoints = parseInt($('ini_points').value);
-        randomwalks = new RandomWalks($('myCanvas'), iniHeight,iniPoints);
+        randomwalks = new RandomWalks($('myCanvas'), iniHeight,iniPoints, {
+            stats: statsCallback
+        });
         randomwalks.init();
         $('myCanvas').addEventListener('click', function(e){
             randomwalks.addPoint(e.offsetX,e.offsetY);
