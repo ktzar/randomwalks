@@ -40,7 +40,7 @@
                 that.world[x][y] = that.initHeight;
 
             }
-            that.ctx.font = "10pt courier";
+            that.ctx.clearRect(0,0,that.cnv.width,that.cnv.height);
         }
 
         var getPoints = function()
@@ -68,7 +68,7 @@
             var _i, _x, _y, diff;
             Ps = getPoints();
             //clone
-            newPs = Ps.slice(0);
+            newPs = new Array();//Ps.slice(0);
             for (i in Ps) {
                 x = Ps[i][0];
                 y = Ps[i][1];
@@ -133,7 +133,6 @@
             }
 
             //Draw all the found points
-            that.ctx.clearRect(0,0,that.cnv.width,that.cnv.height);
             for (i in precalculatedPoints) {
                 x = precalculatedPoints[i][0];
                 y = precalculatedPoints[i][1];
