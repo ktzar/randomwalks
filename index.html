@@ -7,20 +7,32 @@
     body{
         font-family: Arial;
     }
+    .controls{
+        float:right;
+    }
+    output{
+        background:white;
+        border:1px solid #333;
+        border-radius:10px;
+        box-shadow: inset 0px 2px 8px rgba(0,0,0,0.5);
+        padding: 0px 10px;
+    }
 </style>
 <script type="text/javascript" charset="utf-8" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" charset="utf-8" src="script.js"></script>
 <body>
-    <canvas id="myCanvas" width="640" height="480"></canvas><br/>
     <section class="instructions">Modify the values, click on init, and then on start.</section>
-    Stats: <output id="stats"></output><br/>
+    Max Height: <output id="height"></output><br/>
+    Cycle: <output id="cycle"></output><br/>
     Watch: <output id="watch"></output><br/>
     <section class="controls">
-        <label>Initial Height</label><input value="500" type="text" id="ini_height"/>
+        <label>Initial Height</label><input value="500" type="text" id="ini_height"/><br/>
         <label>Initial points</label><input value="10" type="text" id="ini_points"/><br/>
         <button id="bt_init">Init</button>
         <button id="bt_start">Start</button>
         <button id="bt_stop">Stop</button>
+        <button id="bt_save">Save</button>
     </section>
+    <canvas id="myCanvas" width="640" height="480"></canvas><br/>
 </body>
 </html>

@@ -146,11 +146,16 @@
             that.callbacks.stats(that.currentMaxHeight, that.cycle);
         }
 
+        this.save = function(){
+            return(that.cnv.toDataURL("image/jpg"));
+        }
+
     };
 
 var randomralks;
 var statsCallback = function (maxHeight, cycle) {
-    $('#stats').html('MaxHeight: '+maxHeight+'<br/>Cycle: '+cycle);
+    $('#height').html(maxHeight);
+    $('#cycle').html(cycle);
 }
 $(function(){
     $('#bt_init').click(function(e){
@@ -171,6 +176,9 @@ $(function(){
         });
         $('#bt_stop').click(function(){
             randomwalks.stop();
+        });
+        $('#bt_save').click(function(){
+            document.location.href = randomwalks.save();
         });
     });
 });
