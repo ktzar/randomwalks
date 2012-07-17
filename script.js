@@ -43,8 +43,7 @@
             that.ctx.clearRect(0,0,that.cnv.width,that.cnv.height);
         }
 
-        var getPoints = function()
-        {
+        var getPoints = function() {
             var Ps = [], x, y;
             var maxHeight = 0;
             //write down all the points here
@@ -60,8 +59,7 @@
             return Ps;
         }
 
-        var findRandomNeighbour = function(x,y) 
-        {
+        var findRandomNeighbour = function(x,y) {
             //pick random neighbor
             _i = parseInt(Math.random()*8);
             if (_i == 1 || _i == 4 || _i == 6) {
@@ -81,8 +79,7 @@
             return new Array(_x,_y);
         }
 
-        var iterate = function()
-        {
+        var iterate = function() {
             var neighbour, _i, _x, _y, diff;
             Ps = getPoints();
             //clone
@@ -110,12 +107,16 @@
             that.cycle ++;
         }
 
-        this.start = function(){
+        this.getPointValue = function(x,y) {
+            return that.world[x][y];
+        }
+
+        this.start = function() {
             that.continuous = true;
             iterate();
         }
 
-        this.stop = function(){
+        this.stop = function() {
             that.continuous = false;
         }
 
@@ -163,7 +164,7 @@ $(function(){
             randomwalks.addPoint(e.offsetX,e.offsetY);
         });
         $('#myCanvas').mousemove(function(e){
-            console.log(e.offsetX,e.offsetY);
+            $('#watch').html(randomwalks.getPointValue(e.offsetX,e.offsetY));
         });
         $('#bt_start').click(function(){
             randomwalks.start();
