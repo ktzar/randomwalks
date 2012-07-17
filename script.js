@@ -56,10 +56,6 @@
                     }
                 }
             }
-            if (maxHeight < 2) {
-                that.continuous = false;
-                return new Array();
-            }
             that.currentMaxHeight  = maxHeight;
             return Ps;
         }
@@ -108,7 +104,7 @@
                 }
             }
             if (that.continuous == true) {
-                setTimeout(iterate,10);
+                setTimeout(iterate,0);
             }
             drawMap(newPs);
             that.cycle ++;
@@ -152,25 +148,27 @@
     };
 
 var randomralks;
-var $ = function(id){return document.getElementById(id)};
 var statsCallback = function (maxHeight, cycle) {
-    $('stats').innerHTML = 'MaxHeight: '+maxHeight+'<br/>Cycle: '+cycle;
+    $('#stats').html('MaxHeight: '+maxHeight+'<br/>Cycle: '+cycle);
 }
-window.addEventListener('load', function(){
-    $('bt_init').addEventListener('click', function(e){
-        var iniHeight = parseInt($('ini_height').value);
-        var iniPoints = parseInt($('ini_points').value);
-        randomwalks = new RandomWalks($('myCanvas'), iniHeight,iniPoints, {
+$(function(){
+    $('#bt_init').click(function(e){
+        var iniHeight = parseInt($('#ini_height').val());
+        var iniPoints = parseInt($('#ini_points').val());
+        randomwalks = new RandomWalks(document.getElementById('myCanvas'), iniHeight, iniPoints, {
             stats: statsCallback
         });
         randomwalks.init();
-        $('myCanvas').addEventListener('click', function(e){
+        $('#myCanvas').click(function(e){
             randomwalks.addPoint(e.offsetX,e.offsetY);
         });
-        $('bt_start').addEventListener('click', function(){
+        $('#myCanvas').mousemove(function(e){
+            console.log(e.offsetX,e.offsetY);
+        });
+        $('#bt_start').click(function(){
             randomwalks.start();
         });
-        $('bt_stop').addEventListener('click', function(){
+        $('#bt_stop').click(function(){
             randomwalks.stop();
         });
     });
